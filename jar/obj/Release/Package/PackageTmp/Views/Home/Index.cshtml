@@ -1,0 +1,238 @@
+﻿<!DOCTYPE html>
+@model JARi.Controllers.SearchModel
+
+
+    <div class="row">
+        <div class="col-xs-9">
+
+            <form class="form-inline" role="form" action="/Home/Search/" method="post">
+                <h3>Job Alerts <small>Solr Poc for subscribe and deliver</small></h3>
+
+                <div class="form-group">
+                    @Html.DropDownListFor(m => m.DomainId, Model.domains, "select domain", new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    <label class="sr-only" for="keyword">keyword</label>
+                    <input type="text" class="form-control" name="keyword" value="@Model.keyword" placeholder="Enter keyword">
+                </div>
+                <div class="form-group">
+                    <input type="hidden" class="form-control" name="locationText" value="@Model.locationText" />
+                    <input type="hidden" class="form-control" name="locationValue" value ="@Model.locationValue" />
+                    <input type="hidden" class="form-control" name="locationType" value="@Model.locationType" />
+                    <input type="hidden" class="form-control" name="Latitude" value="@Model.Latitude" />
+                    <input type="hidden" class="form-control" name="Longitude" value="@Model.Longitude" />
+                    <label class="sr-only" for="location">Location</label>
+                    <input type="text" class="form-control" name="location" value="@Model.locationText" placeholder="enter location">
+                </div>
+                <div class="form-group">
+                    @* @Html.LabelFor(m=>m.DistanceSelected)*@
+                    @Html.DropDownListFor(m => m.DistanceSelected, Model.Radius, new { @class = "form-control" })
+                </div>
+                <button type="submit" class="btn btn-default">search</button>
+            </form>
+
+
+
+            <br />
+            <br />
+
+            @if (Model.Jobs != null && Model.Jobs.Any())
+            {
+    
+                <h4 class="bg-success">Search term - @(ViewData["kw"] != null ? ViewData["kw"].ToString() : string.Empty)  @(ViewData["loc"] != null ? @ViewData["kw"] != null ? "in " + ViewData["loc"] : ViewData["loc"] : ViewData["loc"]) returned @ViewData["count"] results  </h4>
+   
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>JobID</th>
+                            <th>JobTitle</th>
+                            <th>DMAName</th>
+                            <th>Category</th>
+                            <th>City</th>
+                            <th>State</th>
+                            <th>Country</th>
+                            <th>JobDesc</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var job in Model.Jobs)
+                        {
+    
+                            <tr @(job.NewJob ? "class=success" : "")>
+                                <td>@job.JobID</td>
+                                <td>@job.JobTitle</td>
+                                <td>@job.DMAName.FirstOrDefault()</td>
+                                <td>@job.JobCategoryName</td>
+                                <td>@job.City</td>
+                                <td>@job.State</td>
+                                <td>@job.Country</td>
+                                <td>
+                                    <div class="comment more">@job.JobDesc</div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            @if (TempData["noresults"] != null)
+            {
+   
+                <p class="bg-warning">keyword or location returned no jobs</p>
+   
+            }
+        </div>
+    </div>    
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var host = '/Home/GetlocationData/';
+        $('input[name=location]').autocomplete({
+            minLength: 3,
+            source: function (request, response) {
+                var val = $('input[name=location]').val();
+                var val2 = request.location;
+                $.getJSON(host, { term: val }, function (data) {
+                    if (data == null)
+                        return;
+                    else
+                        console.log(data)
+                    response($.map(data, function (item) {
+                        return {
+                            TypeId: item.TypeId,
+                            realname: getLocationName(item),
+                            value: getformatedName(item),
+                            Id: item.Id,
+                            Latitude: item.Latitude,
+                            Longitude: item.Longitude
+                        }
+                    }))
+                });
+            },
+            select: function (event, ui) {
+                console.log(ui);
+                $('input[name=location]').val(ui.item.value);
+                $('input[name=locationText]').val(ui.item.realname);
+                $('input[name=locationValue]').val(ui.item.Id);
+                $('input[name=locationType]').val(ui.item.TypeId);
+                $('input[name=Latitude]').val(ui.item.Latitude);
+                $('input[name=Longitude]').val(ui.item.Longitude);
+
+            }
+        });
+
+        function getLocationName(loc) {
+            if (loc.City)
+                return loc.City;
+            if (loc.Division1)
+                return loc.Division1
+            if (loc.Country)
+                return loc.Country
+            if (loc.Division2)
+                return loc.Division2
+            if (loc.Division3)
+                return loc.Division3
+            return ''
+        }
+
+        function getformatedName(loc) {
+            var locname = '';
+            if (loc.City)
+                locname = loc.City;
+            if (loc.Division1)
+                locname = locname === '' ? loc.Division1 : locname + "," + loc.Division1
+            if (loc.Country)
+                locname = locname === '' ? loc.Country : locname + "(" + loc.Country + ")";
+            return locname
+        }
+
+
+        var showChar = 100;
+        var ellipsestext = "...";
+        var moretext = "more";
+        var lesstext = "less";
+        $('.more').each(function () {
+            var content = $(this).html();
+
+            if (content.length > showChar) {
+
+                var c = content.substr(0, showChar);
+                var h = content.substr(showChar - 1, content.length - showChar);
+
+                var html = c + '<span class="moreellipses">' + ellipsestext + '&nbsp;</span><span class="morecontent"><span>' + h + '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
+
+                $(this).html(html);
+            }
+
+        });
+
+        $(".morelink").click(function () {
+            if ($(this).hasClass("less")) {
+                $(this).removeClass("less");
+                $(this).html(moretext);
+            } else {
+                $(this).addClass("less");
+                $(this).html(lesstext);
+            }
+            $(this).parent().prev().toggle();
+            $(this).prev().toggle();
+            return false;
+        });
+
+    });
+
+
+</script>
+
+<style>
+    .ui-helper-hidden-accessible
+    {
+        display: none;
+    }
+
+    #autocomplete
+    {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 99%;
+    }
+
+    .ui-autocomplete.source:hover
+    {
+        background: white;
+    }
+
+    .ui-menu .ui-menu-item a
+    {
+        background-color: #f0f0f0;
+        font-size: 14px;
+    }
+
+    a
+    {
+        color: #0254EB;
+    }
+
+        a:visited
+        {
+            color: #0254EB;
+        }
+
+        a.morelink
+        {
+            text-decoration: none;
+            outline: none;
+        }
+
+    .morecontent span
+    {
+        display: none;
+    }
+
+    .comment
+    {
+        width: 400px;
+        background-color: #f0f0f0;
+        margin: 10px;
+    }
+</style>

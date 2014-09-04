@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+
+
+<script src="~/Scripts/search_engine.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        searchengine.init();
+    });
+</script>
+
+<head>
+    <title>search widget</title>
+</head>
+
+<body>
+
+    <div>
+        <h3>Job Search Widget</h3>
+        <input type="text" id="job_input_text" placeholder="enter search term here.." />
+
+        <ul id="jobs" />
+    </div>
+
+    <style type="text/css">
+        #jobs
+        {
+            list-style-type: none;
+        }
+
+        .menuitem
+        {
+            color: #bbb;
+            list-style-type: none;
+            border: 1px solid #333;
+            width: 300px;
+        }
+
+            .menuitem span
+            {
+                font-family: 'Trebuchet MS';
+                font-size: 14px;
+                font-weight: 400;
+                color: black;
+            }
+
+            .menuitem a
+            {
+                text-decoration: none;
+                display: block;
+                color: #1486c1;
+            }
+
+        .error span
+        {
+            color: red;
+            font-family: 'Trebuchet MS';
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<script src="~/Scripts/search_engine.js"></script>
+<script type="text/javascript">    
+    
+    $(document).ready(function () {
+        searchengine.init();
+    });
+</script>
+
+<script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-26367284-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function () {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+</script>
+
+
+<head>
+    <title>search widget</title>
+</head>
+
+<body>
+
+    <div id="recentjobsdiv" style="margin-top: 50px;">
+        <h3>Recent Jobs
+            <small>at jobs.dell.com</small>
+            <a onclick="_gaq.push(['_trackEvent', 'JobAlert', 'Form Submit', 'something']);">aaa</a>
+        </h3>
+        <ul id="recentjobs" />
+    </div>
+
+    <div id="featuredjobsdiv" style="margin-top: 50px;">
+        <h3>Featured Jobs
+            <small>Software Developement jobs in Austin,Texas</small>
+        </h3>
+        <ul id="featuredjobs" />
+    </div>
+
+
+    <style type="text/css">
+        #jobs
+        {
+            list-style-type: none;
+        }
+
+        .menuitem
+        {
+            color: #bbb;
+            list-style-type: none;
+            border: 1px solid #333;
+            width: 300px;
+        }
+
+            .menuitem span
+            {
+                font-family: 'Trebuchet MS';
+                font-size: 14px;
+                font-weight: 400;
+                color: black;
+            }
+
+            .menuitem a
+            {
+                text-decoration: none;
+                display: block;
+                color: #1486c1;
+            }
+
+        .error span
+        {
+            color: red;
+            font-family: 'Trebuchet MS';
+        }
+    </style>
+
+</body>
+</html>

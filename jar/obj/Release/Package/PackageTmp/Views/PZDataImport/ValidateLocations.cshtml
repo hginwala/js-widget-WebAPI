@@ -1,0 +1,31 @@
+﻿@model jar.Controllers.LocationModel
+
+ @{
+    ViewBag.Title = "Pizza hut Data Import Location Results";
+}
+
+<h2> Results</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>IPCountry</th>
+            <th>IPRegion</th>
+            <th>IPCity</th>
+            <th>Exact Match</th>
+            <th>Matched Location</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var loc in Model.LocationModelList)
+        {
+            <tr>
+                <td>@loc.IPCountry</td>
+                <td>@loc.IPRegion</td>
+                <td>@loc.IPCity</td>
+                <td>@Html.CheckBoxFor(m=>loc.ExactMatch)</td>
+                <td><strong> @Html.Raw(@loc.MatchedLocation)</strong></td>
+            </tr>
+        }
+    </tbody>
+</table>

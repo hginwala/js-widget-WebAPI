@@ -1,0 +1,54 @@
+﻿
+
+<h4> test view</h4>
+
+
+
+<html>
+<head>
+    <title>Solr Search</title>
+</head>
+<body>
+    <h3>Solr Search</h3>
+
+    Query: <input id="query" /> 
+    <button id="search">Search</button>
+    <hr/>
+    <div id="results">
+    </div>
+</body>
+
+<script>
+    function on_data(data) {
+        $('#results').empty();
+        var docs = data.response.docs;
+        $.each(docs, function (i, item) {
+            console.log(item)
+            $('#results').prepend($('<div>' + item.JobID + '</div>'));
+        });
+
+        var total = 'Found ' + docs.length + ' results';
+        $('#results').prepend('<div>' + total + '</div>');
+    }
+
+    function on_search() {
+        var query = $('#query').val();
+        if (query.length == 0) {
+            return;
+        }
+
+        var url = 'http://TMPSOLR02P:8080/solr/SeoSite/select/?q=' + query + '&version=2.2&start=0&rows=1000&indent=on&wt=json&callback=?&json.wrf=on_data';
+        $.getJSON(url);
+    }
+
+    function on_ready() {
+        $('#search').click(on_search);        
+        $('body').keypress(function(e) {
+            if (e.keyCode == '13') {
+                on_search();
+            }
+        });
+    }
+
+    $(document).ready(on_ready);
+</script>
