@@ -17,7 +17,7 @@ namespace searchwidgetservice.CustomAttributes
         {
             var corsRequestContext = request.GetCorsRequestContext();
             var originRequested = corsRequestContext.Origin;
-            if (await IsOriginFromAPaidCustomer(originRequested))
+            if (await RequestFromVerifiedCustomer(originRequested))
             {
                 // Grant CORS request
                 var policy = new CorsPolicy
@@ -34,7 +34,7 @@ namespace searchwidgetservice.CustomAttributes
                 return null;
             }
         }
-        private async Task<bool> IsOriginFromAPaidCustomer(string originRequested)
+        private async Task<bool> RequestFromVerifiedCustomer(string originRequested)
         {
             List<string> verifiedDomains =  getdomains(); // this where you get list of verified domains from db or someother source
             

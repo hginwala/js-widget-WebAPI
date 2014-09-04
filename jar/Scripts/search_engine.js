@@ -7,7 +7,7 @@ var searchengine = new function () {
         var serviceurl = 'http://localhost:9810/api/values/';
         var recentjobsuri = serviceurl + 'RecentJobs/' + key;
         var featuredjobsuri = serviceurl + "search/" + key + "/"
-            + "Software Developement Austin Texas" + "/" + "3";
+            + "Software Developement Austin Texas" + "/" + "3"; // featured job criteria and # of results
 
         $(document).ready(function () {
             $('#job_input_text').autocomplete({
@@ -27,7 +27,7 @@ var searchengine = new function () {
                 }
             });
 
-            $.ajax( recentjobsuri,{ type: 'POST' }, { dataType: format })
+            $.ajax(recentjobsuri,{ type: 'POST' }, { dataType: format })
                        .done(function (data) { callback(data, '#recentjobs'); })
                        .fail(function (jqXHR, textStatus, err) {
                            failedcallback(jqXHR, textStatus, err, '#recentjobs');
